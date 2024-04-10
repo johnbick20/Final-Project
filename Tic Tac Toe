@@ -3,40 +3,104 @@ import java.awt.*;
 import java.util.Random;
 
 /**
- * Programmer: John Bickhardt
- * Date Written: 04/02/2024
+ * @author John Bickhardt
+ * @since 04/02/2024
+ *
  * Description: A Tic Tac Toe game played against another player or a basic AI, implemented in Java using JFrame.
  */
 
-public class TicTacToeGame extends JFrame {
+public class TicTacToeGame extends JFrame 
+{   
+    /** 
+    *2D array to store the game board
+    */
     private char[][] gameBoard;
+    
+    /**
+    *2D array of buttons representing the game board
+    */
     private JButton[][] boardButtons;
+    
+    /**
+    * Label to display game status
+    */
     private JLabel statusLabel;
+    
+    /**
+    * Symbol for player 1
+    */
     private static final char PLAYER1_MARK = 'X';
+    
+    /**
+    * Symbol for player 2
+    */
     private static final char PLAYER2_MARK = 'O';
+    
+    /**
+    * Name of player 1
+    */
     private String playerName1;
+    
+    /**
+    * Name of player 2
+    */
     private String playerName2;
+    
+    /**
+    * Flag indicating if it's a two-player mode
+    */
     private boolean isTwoPlayerMode;
+    
+    /**
+    * Flag indicating player 1's turn
+    */
     private boolean player1Turn = true;
+    
+    /**
+    * Number of wins for player 1
+    */
     private int player1Wins = 0;
+    
+    /**
+    * Number of wins for player 2 or computer
+    */
     private int player2Wins = 0;
+    
+        public static void main(String[] args) 
+    {
+        SwingUtilities.invokeLater(() -> new TicTacToeGame().setVisible(true));
+    }
 
-    public TicTacToeGame() {
+
+    public TicTacToeGame() 
+    {
         Object[] options = {"1 Player", "2 Players"};
+        
         int choice = JOptionPane.showOptionDialog(this, "Select Mode:", "Tic Tac Toe Game",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, options, options[0]);
+                     JOptionPane.DEFAULT_OPTION, 
+                     JOptionPane.QUESTION_MESSAGE,
+                     null, options, options[0]);
+                     
+                     
         isTwoPlayerMode = (choice == 1);
 
         playerName1 = JOptionPane.showInputDialog(this, "Enter player 1 name:", "Player Name", JOptionPane.QUESTION_MESSAGE);
+        
         playerName2 = isTwoPlayerMode ? JOptionPane.showInputDialog(this, "Enter player 2 name:", "Player Name", JOptionPane.QUESTION_MESSAGE) : "Computer";
-
+         
+        //name of the window
         setTitle("Tic Tac Toe Game");
+        
+        //size of the window
         setSize(320, 350);
+        
+        //задаем фукцию при которм окно закрывается
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
         setLayout(new BorderLayout());
 
         statusLabel = new JLabel("Player 1's turn (X)", SwingConstants.CENTER);
+        
         add(statusLabel, BorderLayout.NORTH);
 
         JPanel boardPanel = new JPanel();
@@ -49,9 +113,12 @@ public class TicTacToeGame extends JFrame {
         initializeBoard(boardPanel);
     }
 
-    private void initializeBoard(JPanel boardPanel) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+    private void initializeBoard(JPanel boardPanel) 
+    {
+        for (int i = 0; i < 3; i++) 
+        {
+            for (int j = 0; j < 3; j++) 
+            {
                 boardButtons[i][j] = new JButton();
                 boardButtons[i][j].setFont(new Font(Font.SANS_SERIF, Font.BOLD, 60));
                 boardPanel.add(boardButtons[i][j]);
@@ -64,43 +131,62 @@ public class TicTacToeGame extends JFrame {
         }
     }
 
-    private void buttonClicked(int row, int col) {
-        if (gameBoard[row][col] == 0) {
+    private void buttonClicked(int row, int col) 
+    {
+        if (gameBoard[row][col] == 0) 
+        {
             gameBoard[row][col] = player1Turn ? PLAYER1_MARK : PLAYER2_MARK;
             boardButtons[row][col].setText(String.valueOf(gameBoard[row][col]));
             boardButtons[row][col].setEnabled(false);
 
-            if (checkWin(gameBoard[row][col])) {
-                if (player1Turn) {
+            if (checkWin(gameBoard[row][col])) 
+            {
+                if (player1Turn) 
+                {
                     player1Wins++;
                     JOptionPane.showMessageDialog(this, playerName1 + " wins!");
-                } else {
+                }
+                
+                else 
+                {
                     player2Wins++;
                     JOptionPane.showMessageDialog(this, playerName2 + " wins!");
                 }
                 resetBoard();
-            } else {
+            } 
+            
+            else 
+            {
                 player1Turn = !player1Turn;
                 updateStatusLabel();
-                if (!isTwoPlayerMode && !player1Turn) {
+                if (!isTwoPlayerMode && !player1Turn) 
+                {
                     computerTurn();
                 }
             }
         }
     }
 
-    private void updateStatusLabel() {
-        if (player1Turn) {
+    private void updateStatusLabel() 
+    {
+        if (player1Turn) 
+        {
             statusLabel.setText(playerName1 + "'s turn (X) | Wins: " + player1Wins + ", Losses: " + player2Wins);
-        } else {
+        } 
+        
+        else 
+        {
             statusLabel.setText(playerName2 + "'s turn (O) | Wins: " + player2Wins + ", Losses: " + player1Wins);
         }
     }
 
-    private void computerTurn() {
+    private void computerTurn() 
+    {
         Random random = new Random();
         int x, y;
-        do {
+        
+        do 
+        {
             x = random.nextInt(3);
             y = random.nextInt(3);
         } while (gameBoard[x][y] != 0);
@@ -109,23 +195,31 @@ public class TicTacToeGame extends JFrame {
         boardButtons[x][y].setText(String.valueOf(PLAYER2_MARK));
         boardButtons[x][y].setEnabled(false);
 
-        if (checkWin(PLAYER2_MARK)) {
+        if (checkWin(PLAYER2_MARK)) 
+        {
             player2Wins++;
             JOptionPane.showMessageDialog(this, playerName2 + " wins!");
             resetBoard();
-        } else {
+        } 
+        
+        else 
+        {
             player1Turn = true;
             updateStatusLabel();
         }
     }
 
-    private boolean checkWin(char player) {
-        for (int i = 0; i < 3; i++) {
+    private boolean checkWin(char player) 
+    {
+        for (int i = 0; i < 3; i++) 
+        {
             if (gameBoard[i][0] == player && gameBoard[i][1] == player && gameBoard[i][2] == player ||
-                gameBoard[0][i] == player && gameBoard[1][i] == player && gameBoard[2][i] == player) {
+                gameBoard[0][i] == player && gameBoard[1][i] == player && gameBoard[2][i] == player) 
+            {
                 return true;
             }
         }
+        
         if (gameBoard[0][0] == player && gameBoard[1][1] == player && gameBoard[2][2] == player ||
             gameBoard[0][2] == player && gameBoard[1][1] == player && gameBoard[2][0] == player) {
             return true;
@@ -133,9 +227,12 @@ public class TicTacToeGame extends JFrame {
         return false;
     }
 
-    private void resetBoard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+    private void resetBoard() 
+    {
+        for (int i = 0; i < 3; i++) 
+        {
+            for (int j = 0; j < 3; j++) 
+            {
                 gameBoard[i][j] = 0;
                 boardButtons[i][j].setEnabled(true);
                 boardButtons[i][j].setText("");
@@ -143,9 +240,5 @@ public class TicTacToeGame extends JFrame {
         }
         player1Turn = true;
         updateStatusLabel();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TicTacToeGame().setVisible(true));
     }
 }
